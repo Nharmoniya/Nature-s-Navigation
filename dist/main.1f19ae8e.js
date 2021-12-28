@@ -118,6 +118,34 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"main.js":[function(require,module,exports) {
+var $siteList = $(".siteList");
+var $lastLi = $siteList.find("li.last"); //注意从getItem中拿出x时要加单引号，因为x此时是数组
+
+var x = localStorage.getItem('x'); //把变成字符串名为x的hashmap从localStorage中拿出来
+
+var xObject = JSON.parse(x); //将hashmap重新变为对象
+//将hashmap等于xObject ||(或者) 等于存入的数组
+
+var hashMap = xObject || [{
+  logo: "https://developer.mozilla.org/favicon-192x192.png",
+  url: "https://developer.mozilla.org/zh-CN/",
+  link: "MDN"
+}, {
+  logo: "src/Caniuse.jpg",
+  url: "https://caniuse.com/",
+  link: "Caniuse"
+}];
+
+var render = function render() {
+  $siteList.find('li:not(.last)').remove(); //把之前的li都找到除了最后一个，然后删除
+
+  hashMap.forEach(function (node) {
+    var $li = $("<li>\n    <a href=\"".concat(node.url, "\">\n      <div class=\"site\">\n        <div class=\"logo\"><img src=").concat(node.logo, "/></div>\n        <div class=\"link\">").concat(node.link, "</div>\n      </div>\n    </a>\n  </li>\n    ")).insertBefore($lastLi);
+  });
+}; //调用render
+
+
+render();
 $(".addButton").on("click", function () {
   var url = window.prompt("请问你要添加的网址是啥？");
   var urlName = window.prompt("请问你要添加的网址名称");
@@ -128,10 +156,21 @@ $(".addButton").on("click", function () {
   }
 
   console.log(url);
-  var $siteList = $(".siteList");
-  var $lastLi = $siteList.find("li.last");
-  var $li = $("<li>\n  <a href=\"".concat(url, "\">\n            <div class=\"site\">\n              <div class=\"logo\">").concat(url[0], "</div>\n              <div class=\"link\">").concat(urlName, "</div>\n            </div>\n          </a>\n  </li>")).insertBefore($lastLi);
-});
+  hashMap.push({
+    logo: url[0],
+    url: url,
+    link: urlName,
+    logoType: 'text'
+  }); //调用render
+
+  render();
+}); //监听用户关闭浏览器的API
+
+window.onbeforeunload = function () {
+  var string = JSON.stringify(hashMap); //把对象变成字符串
+
+  localStorage.setItem('x', string); //把变成字符串的hashmap存入localStorage中名为x
+};
 },{}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -160,7 +199,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49385" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58105" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
