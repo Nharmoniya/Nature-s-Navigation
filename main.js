@@ -6,11 +6,11 @@ const xObject = JSON.parse(x)//将hashmap重新变为对象
 //将hashmap等于xObject ||(或者) 等于存入的数组
 const hashMap = xObject || [
   {
-    logo: "https://developer.mozilla.org/favicon-192x192.png",
+    
     url: "https://developer.mozilla.org/zh-CN/",
     link: "MDN"
   },
-  { logo: "src/Caniuse.jpg", 
+  { 
     url: "https://caniuse.com/",
     link: "Caniuse"
   },
@@ -18,17 +18,27 @@ const hashMap = xObject || [
 
 const render= ()=>{
   $siteList.find('li:not(.last)').remove()//把之前的li都找到除了最后一个，然后删除
-  hashMap.forEach(node => {
+  hashMap.forEach((node,index) => {
     const $li = $(`<li>
-    <a href="${node.url}">
       <div class="site">
-        <div class="logo"><img src=${node.logo}/></div>
+        <div class="logo">${node.link[0]}</div>
         <div class="link">${node.link}</div>
+        <div class="close">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-add"></use>
+        </svg>
       </div>
-    </a>
-  </li>
-    `).insertBefore($lastLi);
-  });
+      </div>
+  </li>`).insertBefore($lastLi);
+  $li.on('click',()=>{
+    window.open(node.url)
+  })
+  $li.on('click','.close',(e)=>{
+    e.stopPropagation();//为了阻止点击X跳转，阻止冒泡
+    hashMap.splice(index, 1)
+    render();
+  })
+  })
 }
 //调用render
 render();
@@ -42,7 +52,6 @@ $(".addButton").on("click", () => {
   }
   console.log(url);
   hashMap.push({
-    logo:url[0],
     url:url,
     link:urlName,
     logoType:'text',
@@ -56,3 +65,14 @@ window.onbeforeunload = ()=>{
   const string = JSON.stringify(hashMap)//把对象变成字符串
   localStorage.setItem('x',string)//把变成字符串的hashmap存入localStorage中名为x
 }
+
+//监听键盘
+$(document).on('keypress', (e) => {
+  const key =e.key
+  console.log(key)
+  for(let i=0;i<hashMap.length;i++){
+    if(hashMap[i].link[0].toLowerCase() === key){
+      window.open(hashMap[i].url)
+    }
+  }
+})

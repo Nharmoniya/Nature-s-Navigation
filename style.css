@@ -34,9 +34,23 @@ body {
 .globalHeader {
   margin-top: 40px;
 }
+@media (min-width:500px){
+  .globalHeader {
+    margin-top: 80px;
+  }
+}
 .searchForm {
   display: flex;
   justify-content: space-between;
+  max-width: 400px; 
+}
+/*媒体查询最小宽度500就不管*/
+@media (min-width:500px){
+  .searchForm {
+    max-width: 400px;
+    margin-left: auto;/*当你的宽度确认就可以使用magin来做居中*/
+    margin-right: auto;
+  }
 }
 .searchForm > input {
   width: 100%;
@@ -62,6 +76,9 @@ body {
 }
 
 .globalMain {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .siteList {
@@ -70,8 +87,22 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+/*在pc端margin为0*/
+@media(min-width:500px){
+  .siteList{
+    margin-left: 0;
+    margin-right: -25px;
+    justify-content: flex-start;
+  }
+}
 .siteList > li {
   margin-bottom: 20px;
+
+}
+@media(min-width:500px){
+  .siteList > li {
+    margin-right: 25px;
+  }
 }
 .siteList .site {
   width: 166px;
@@ -83,15 +114,37 @@ body {
   flex-direction: column;
   border: 1px solid #dddddd;
   border-radius: 4px;
+  position: relative;
+
 }
+@media(min-width:500px) {
+.siteList .site {
+  cursor: pointer;
+  }
+}
+
 .siteList .site > .logo {
-  width: 51px;
-  height: 53px;
-  font-size: 24px;
+  font-size: 72px;
+  text-transform: uppercase;
+}
+.siteList .site > .close{
+  position: absolute;
+  right:0;
+  top: 0;
+  transform:rotate(45deg);/*别问问就是用add旋转了一下嘿嘿*/
+}
+@media(min-width:500px) {
+  .siteList .site > .close{
+  cursor: default;
+  display: none;
+  }
+  .siteList .site:hover .close{
+    display: block;
+  }
 }
 
 .siteList .site > .link {
-  margin-top: 10px;
+
   font-size: 18px;
 }
 
@@ -104,6 +157,12 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+}
+@media(min-width:500px){
+  .siteList .addButton {
+  cursor: pointer;
+  }
 }
 .siteList .addButton .icon {
   width: 91px;

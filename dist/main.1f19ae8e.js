@@ -127,11 +127,9 @@ var xObject = JSON.parse(x); //将hashmap重新变为对象
 //将hashmap等于xObject ||(或者) 等于存入的数组
 
 var hashMap = xObject || [{
-  logo: "https://developer.mozilla.org/favicon-192x192.png",
   url: "https://developer.mozilla.org/zh-CN/",
   link: "MDN"
 }, {
-  logo: "src/Caniuse.jpg",
   url: "https://caniuse.com/",
   link: "Caniuse"
 }];
@@ -139,8 +137,17 @@ var hashMap = xObject || [{
 var render = function render() {
   $siteList.find('li:not(.last)').remove(); //把之前的li都找到除了最后一个，然后删除
 
-  hashMap.forEach(function (node) {
-    var $li = $("<li>\n    <a href=\"".concat(node.url, "\">\n      <div class=\"site\">\n        <div class=\"logo\"><img src=").concat(node.logo, "/></div>\n        <div class=\"link\">").concat(node.link, "</div>\n      </div>\n    </a>\n  </li>\n    ")).insertBefore($lastLi);
+  hashMap.forEach(function (node, index) {
+    var $li = $("<li>\n      <div class=\"site\">\n        <div class=\"logo\">".concat(node.link[0], "</div>\n        <div class=\"link\">").concat(node.link, "</div>\n        <div class=\"close\">\n        <svg class=\"icon\" aria-hidden=\"true\">\n          <use xlink:href=\"#icon-add\"></use>\n        </svg>\n      </div>\n      </div>\n  </li>")).insertBefore($lastLi);
+    $li.on('click', function () {
+      window.open(node.url);
+    });
+    $li.on('click', '.close', function (e) {
+      e.stopPropagation(); //为了阻止点击X跳转，阻止冒泡
+
+      hashMap.splice(index, 1);
+      render();
+    });
   });
 }; //调用render
 
@@ -157,7 +164,6 @@ $(".addButton").on("click", function () {
 
   console.log(url);
   hashMap.push({
-    logo: url[0],
     url: url,
     link: urlName,
     logoType: 'text'
@@ -170,7 +176,19 @@ window.onbeforeunload = function () {
   var string = JSON.stringify(hashMap); //把对象变成字符串
 
   localStorage.setItem('x', string); //把变成字符串的hashmap存入localStorage中名为x
-};
+}; //监听键盘
+
+
+$(document).on('keypress', function (e) {
+  var key = e.key;
+  console.log(key);
+
+  for (var i = 0; i < hashMap.length; i++) {
+    if (hashMap[i].link[0].toLowerCase() === key) {
+      window.open(hashMap[i].url);
+    }
+  }
+});
 },{}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -199,7 +217,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52497" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51078" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
